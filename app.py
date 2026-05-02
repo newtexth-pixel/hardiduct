@@ -4,7 +4,7 @@ from bson.objectid import ObjectId
 import hashlib
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 app.secret_key = 'hardiduct_secret_2024'
 
 # ===== اتصال MongoDB =====
