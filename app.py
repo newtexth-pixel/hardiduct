@@ -137,7 +137,9 @@ def add_customer():
         'phone': d['phone'],
         'arboon': d.get('arboon', 0),
         'baqui': d.get('baqui', 0),
-        'delivered': False,
+        'pala': d.get('pala', ''),
+'joridakt': d.get('joridakt', ''),
+'delivered': False,
         'done': False,
         'date': datetime.now().strftime('%Y-%m-%d'),
         'added_by': session['user']['name']
