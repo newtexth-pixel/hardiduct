@@ -24,33 +24,38 @@ body {
   max-width: 400px;
   box-shadow: 0 25px 50px rgba(0,0,0,0.5);
 }
-.logo {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.logo h1 {
-  color: #e94560;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
+.logo { text-align: center; margin-bottom: 30px; }
+.logo h1 { color: #e94560; font-size: 2rem; font-weight: 800; }
 .logo p { color: #aaa; margin-top: 5px; }
 .form-group { margin-bottom: 20px; }
 label { color: #ccc; display: block; margin-bottom: 8px; font-size: 0.9rem; }
-input {
-  width: 100%;
-  padding: 12px 16px;
+.input-box {
+  display: flex;
+  align-items: center;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 10px;
+  overflow: hidden;
+}
+.input-box input {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
   color: white;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.3s;
 }
-input:focus { border-color: #e94560; }
-input::placeholder { color: #666; }
-button {
+.input-box input::placeholder { color: #666; }
+.eye-btn {
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.login-btn {
   width: 100%;
   padding: 14px;
   background: linear-gradient(135deg, #e94560, #c23152);
@@ -60,53 +65,65 @@ button {
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
   margin-top: 10px;
 }
-button:hover { transform: translateY(-2px); opacity: 0.9; }
-.error {
-  color: #e94560;
-  text-align: center;
-  margin-top: 15px;
-  font-size: 0.9rem;
-  display: none;
-}
+.error { color: #e94560; text-align: center; margin-top: 15px; font-size: 0.9rem; display: none; }
 </style>
 </head>
 <body>
 <div class="card">
   <div class="logo">
-    <h1>🏢 Hardi Duct</h1>
-    <p>نظام إدارة العملاء والمبيعات</p>
+    <h1>&#x1F3E2; Hardi Duct</h1>
+    <p>&#x646;&#x638;&#x627;&#x645; &#x625;&#x62F;&#x627;&#x631;&#x629; &#x627;&#x644;&#x639;&#x645;&#x644;&#x627;&#x621; &#x648;&#x627;&#x644;&#x645;&#x628;&#x64A;&#x639;&#x627;&#x62A;</p>
   </div>
   <div class="form-group">
-    <label>📧 الإيميل</label>
-    <input type="email" id="email" placeholder="أدخل إيميلك">
+    <label>&#x1F4E7; &#x627;&#x644;&#x625;&#x64A;&#x645;&#x64A;&#x644;</label>
+    <div class="input-box">
+      <input type="email" id="email" placeholder="&#x623;&#x62F;&#x62E;&#x644; &#x625;&#x64A;&#x645;&#x64A;&#x644;&#x643;" autocomplete="off">
+    </div>
   </div>
   <div class="form-group">
-    <label>🔒 كلمة السر</label>
-    <input type="password" id="password" placeholder="أدخل كلمة السر">
+    <label>&#x1F512; &#x643;&#x644;&#x645;&#x629; &#x627;&#x644;&#x633;&#x631;</label>
+    <div class="input-box">
+      <input type="password" id="password" placeholder="&#x623;&#x62F;&#x62E;&#x644; &#x643;&#x644;&#x645;&#x629; &#x627;&#x644;&#x633;&#x631;" autocomplete="new-password">
+      <button class="eye-btn" id="eyeBtn" type="button" onclick="togglePass()">&#x1F441;</button>
+    </div>
   </div>
-  <button onclick="login()">دخول</button>
-  <div class="error" id="error">❌ إيميل أو كلمة السر خاطئة!</div>
+  <button class="login-btn" onclick="login()">&#x62F;&#x62E;&#x648;&#x644;</button>
+  <div class="error" id="error">&#x274C; &#x625;&#x64A;&#x645;&#x64A;&#x644; &#x623;&#x648; &#x643;&#x644;&#x645;&#x629; &#x627;&#x644;&#x633;&#x631; &#x62E;&#x627;&#x637;&#x626;&#x629;!</div>
 </div>
 <script>
-async function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const res = await fetch('/login', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({email, password})
-  });
-  const data = await res.json();
-  if (data.ok) {
-    window.location.href = '/';
+function togglePass() {
+  var input = document.getElementById('password');
+  var btn = document.getElementById('eyeBtn');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.innerHTML = '&#x1F648;';
   } else {
+    input.type = 'password';
+    btn.innerHTML = '&#x1F441;';
+  }
+}
+async function login() {
+  var email = document.getElementById('email').value;
+  var password = document.getElementById('password').value;
+  try {
+    var res = await fetch('/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email: email, password: password})
+    });
+    var data = await res.json();
+    if (data.ok) {
+      window.location.href = '/';
+    } else {
+      document.getElementById('error').style.display = 'block';
+    }
+  } catch(e) {
     document.getElementById('error').style.display = 'block';
   }
 }
-document.addEventListener('keypress', e => { if (e.key === 'Enter') login(); });
+document.addEventListener('keypress', function(e) { if (e.key === 'Enter') login(); });
 </script>
 </body>
 </html>
